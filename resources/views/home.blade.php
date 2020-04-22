@@ -47,16 +47,19 @@
                             <input style="margin-bottom: 20px" class="btn btn-primary" type="submit" name="" value="Cek Status Checkin">
                         </form>
                         @if($GetStatus == "not-acceptable")
-                          <p style="color:green; font-size: 20px"><b>Kamu Sudah Melakukan Checkin hari Ini<b></p>
+                          <p style="color:green; font-size: 16px"><b>Kamu Sudah Melakukan Checkin hari Ini<b></p>
                         @elseif($GetStatus == "acceptable")
-                          <p style="color:red; font-size: 20px"><b>Kamu Belum Melakukan Checkin hari Ini<b></p>
+                          <p style="color:red; font-size: 16px"><b>Kamu Belum Melakukan Checkin hari Ini<b></p>
                           <form class="" id="checkin" action="" onsubmit="checkin()" method="POST">
                               @csrf
-                              <input style="margin-bottom: 20px" class="btn btn-primary" type="submit" name="" value="Checkin">
+                              <input style="margin-bottom: 20px" class="btn btn-danger" type="submit" name="" value="Checkin">
                           </form>
                         @endif
+                        @if (Session::has('invalid'))
+                            <p style="color:red; font-size: 16px"><b>{!! session('invalid') !!}<b></p>
+                        @endif
                         @if($Checkin == "Success")
-                          <p style="color:green; font-size: 20px"><b>Check In Success<b></p>
+                          <p style="color:green; font-size: 16px"><b>Check In Success<b></p>
                         @endif
                     </center>
                   </div>

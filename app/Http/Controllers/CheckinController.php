@@ -10,7 +10,23 @@ class CheckinController extends Controller
 {
     public function Matkul()
     {
-      $matkul = '[{"type":"Online","course":"STRUKTUR DATA","time":"06:30 - 08:30"}, {"type":"Online","course":"BAHASA INDONESIA","time":"10:30 - 12:30"},{"type":"Online","course":"MATEMATIKA DISKRIT","time":"13:30 - 15:30"}]';
+      $date = date("l");
+      $matkul = "";
+
+      if($date == "Monday"){
+        $matkul = '[{"type":"Online","course":"Struktur Data","time":"09:30 - 12:30"}, {"type":"Online","course":"Model Bisnis Digital","time":"13:30 - 16:30"}]';
+      } else if($date == "Tuesday"){
+        $matkul = '[{"type":"Online","course":"Matriks Dan Vektor","time":"08:30 - 10:30"}]';
+      } else if($date == "Wednesday"){
+        $matkul = '[{"type":"Online","course":"Matriks Dan Vektor","time":"06:30 - 08:30"}, {"type":"Online","course":"Struktur Data","time":"13:30 - 15:30"},{"type":"Online","course":"Bahasa Indonesia","time":"15:30 - 17:30"}]';
+      } else if($date == "Thursday"){
+        $matkul = '[{"type":"Online","course":"Kalkulus IIB","time":"12:30 - 14:30"}]';
+      } else if($date == "Friday"){
+        $matkul = '[{"type":"Online","course":"Pendidikan Agama","time":"06:30 - 08:30"}, {"type":"Online","course":"Struktur Data","time":"09:30 - 11:30"},{"type":"Online","course":"Pendidikan Kewarganegaraan","time":"12:30 - 15:30"},{"type":"Online","course":"Matematika Diskrit","time":"15:30 - 17:30"}]';
+      } else if($date == "Saturday"){
+        $matkul = '[{"type":"Online","course":"Kalkulus IIB","time":"10:30 - 12:30"}, {"type":"Online","course":"Matematika Diskrit","time":"13:30 - 15:30"}]';
+      }
+
       return $matkul;
     }
 
@@ -22,24 +38,35 @@ class CheckinController extends Controller
     }
 
     public function getToken($username, $password){
-      $client = new Client();
+      $client = new Client(['http_errors' => false]);
       $GetToken = $client->request('POST', "https://gateway.telkomuniversity.ac.id/issueauth?username=". $username ."&password=". $password);
-      $GetToken = json_decode($GetToken->getBody())->token;
+      if(!empty(json_decode($GetToken->getBody())->status)){
+          $GetToken = "Invalid";
+      } else {
+        $GetToken = json_decode($GetToken->getBody())->token;
+      }
+
       return $GetToken;
     }
 
     public function get_status_checkin($username, $password)
     {
       $Checkin = "initiate";
-      $token = $this->getToken($username, $password);
+      $GetStatus = "initiate";
 
-      $client = new Client();
-      $GetStatus = $client->request('GET', 'https://gateway.telkomuniversity.ac.id/6963684dc52822cbea00f55712020cb7', [
-           'headers' => [
-               'Authorization' => 'Bearer '.$token
-           ]
-      ]);
-      $GetStatus = json_decode($GetStatus->getBody())->status;
+      $token = $this->getToken($username, $password);
+      if($token != "Invalid"){
+        $client = new Client();
+        $GetStatus = $client->request('GET', 'https://gateway.telkomuniversity.ac.id/6963684dc52822cbea00f55712020cb7', [
+             'headers' => [
+                 'Authorization' => 'Bearer '.$token
+             ]
+        ]);
+        $GetStatus = json_decode($GetStatus->getBody())->status;
+      } else {
+        Session::flash('invalid', 'Username Atau Password Salah Silahkan Update Data!');
+      }
+
       return view('home', compact('GetStatus','Checkin'));
     }
 
