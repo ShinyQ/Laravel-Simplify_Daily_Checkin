@@ -55,8 +55,8 @@
                               <input style="margin-bottom: 20px" class="btn btn-danger" type="submit" name="" value="Checkin">
                           </form>
                         @endif
-                        @if (Session::has('invalid'))
-                            <p style="color:red; font-size: 16px"><b>{!! session('invalid') !!}<b></p>
+                        @if ($GetStatus == "Invalid")
+                            <p style="color:red; font-size: 16px"><b>Username Atau Password Salah Silahkan Update Data!<b></p>
                         @endif
                         @if($Checkin == "Success")
                           <p style="color:green; font-size: 16px"><b>Check In Success<b></p>
