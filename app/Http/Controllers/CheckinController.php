@@ -11,7 +11,7 @@ class CheckinController extends Controller
     public function Matkul()
     {
       $date = date("l");
-      $matkul = "weekend";
+      $matkul = '[{"type":"Tugas","course":"Weekend","time":"12:00 - 12:00"}]';
 
       if($date == "Monday"){
         $matkul = '[{"type":"Online","course":"Struktur Data","time":"09:30 - 12:30"}, {"type":"Online","course":"Model Bisnis Digital","time":"13:30 - 16:30"}]';
